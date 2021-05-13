@@ -14,6 +14,6 @@ urlpatterns = [
     path('answer/create', AnswerCreateView.as_view(), name='answer_create'),
     path('answer/', AnswerListView.as_view(), name='answer_create'),
     path('answer/<int:pk>', AnswerUpdateDeleteView.as_view(), name='answer_update'),
-    path('questions/answer/<int:pk>', QuestionAnswerListView.as_view(), name='ques_answ'),
+    path('polls/questions/answer/<int:pk>', QuestionAnswerListView.as_view(), name='ques_answ'),
 
 ]

@@ -9,9 +9,6 @@ from .models import *
 
 
 # Create your views here.
-def home(request):
-    qs = Poll.objects.all()
-    return render(request, 'polls/home.html', {'palls': qs})
 
 
 class PollDetailView(generics.RetrieveAPIView):
@@ -68,11 +65,12 @@ class ChoiceCreateView(generics.CreateAPIView):
 
 class AnswerCreateView(generics.CreateAPIView):
     serializer_class = AnswerSerializer
-
+    queryset = Answer.objects.all()
 
 class AnswerListView(generics.ListAPIView):
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
+    permission_classes = (permissions.IsAdminUser,)
 
 
 class AnswerUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):

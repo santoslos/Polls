@@ -85,6 +85,9 @@ class AnswerSerializer(serializers.Serializer):
         fields = ['pk', 'user', 'question', 'choices', 'choices_text']
 
     def create(self, validated_data):
+        ques = Question.objects.get(pk=validated_data['question'].pk)
+        if not ques.polls.filter(time_end=None):
+            raise serializers.ValidationError('На вопрос нельзя ответить, так как опрос уже окончен')
         return Answer.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
@@ -96,6 +99,7 @@ class AnswerSerializer(serializers.Serializer):
     def validate(self, attrs):
 
         ques = Question.objects.get(pk=attrs['question'].pk)
+
         question_category = ques.question_category
         choices = ques.choice_set.all()
         ans = Answer.objects.filter(question=attrs['question'].pk, user=attrs['user'])
@@ -189,17 +193,3 @@ class PollsDetailUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Poll
         fields = ['title', 'questions']
-
-
-class Test(serializers.ModelSerializer):
-    answer = serializers.SerializerMethodField('get_answers')
-
-    def get_answers(self, question):
-        user = self.context.get('request').parser_context['kwargs']['pk']
-        answer = Answer.objects.filter(user=user, question=question)
-        serializers = AnswerserQuestionSerializer(instance=answer, many=True)
-        return serializers.data
-
-    class Meta:
-        model = Question
-        fields = ['title', 'answer']
