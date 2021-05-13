@@ -21,9 +21,26 @@ class ChoiceSerializerList(serializers.ModelSerializer):
         fields = ['pk', 'title', 'question']
 
     def create(self, validated_data):
+        ques = Question.objects.get(pk=validated_data['question'].pk)
+        if  ques.polls.filter(time_start=None):
+            raise serializers.ValidationError(' выбор  нельзя добавить, так как опрос уже начат')
+
         if validated_data['question'].question_category == 'TX':
             raise serializers.ValidationError('Для этого вопроса нельзя создать вариант ответа')
+
         return Choice.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        ques = Question.objects.get(pk=validated_data['question'].pk)
+        if  ques.polls.filter(time_start=None):
+            raise serializers.ValidationError(' Выбор нельзя обновить, так как опрос уже начат')
+        ques = Question.objects.get(pk=instance.question.pk)
+        if  ques.polls.filter(time_start=None):
+            raise serializers.ValidationError(' Выбор нельзя обновить, так как опрос уже начат')
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save()
+        return instance
 
 
 class ChoiceSerializer(serializers.ModelSerializer):

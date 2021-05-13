@@ -63,9 +63,16 @@ class ChoiceCreateView(generics.CreateAPIView):
     permission_classes = (permissions.IsAdminUser,)
 
 
+class ChoiceUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ChoiceSerializerList
+    queryset = Choice.objects.all()
+    permission_classes = (permissions.IsAdminUser,)
+
+
 class AnswerCreateView(generics.CreateAPIView):
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
+
 
 class AnswerListView(generics.ListAPIView):
     serializer_class = AnswerSerializer
