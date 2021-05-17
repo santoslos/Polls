@@ -63,7 +63,7 @@ class Choice(models.Model):
 class Answer(models.Model):
     user = models.SmallIntegerField()
     question = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
-    choices = models.ForeignKey(Choice, on_delete=models.DO_NOTHING,null=True)
+    choices = models.ForeignKey(Choice, on_delete=models.DO_NOTHING, null=True)
     choices_text = models.CharField(max_length=200, null=True)
 
     def __str__(self):

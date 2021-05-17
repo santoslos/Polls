@@ -13,7 +13,7 @@ urlpatterns = [
     path('choice/create', ChoiceCreateView.as_view(), name='choice_create'),
     path('choice/detail/<int:pk>/', ChoiceUpdateDeleteView.as_view(), name='choice_create'),
     path('answer/create', AnswerCreateView.as_view(), name='answer_create'),
-    path('answer/', AnswerListView.as_view(), name='answer_create'),
+    path('answer/', AnswerListView.as_view(), name='answer_list'),
     path('answer/<int:pk>', AnswerUpdateDeleteView.as_view(), name='answer_update'),
     path('polls/questions/answer/<int:pk>', QuestionAnswerListView.as_view(), name='ques_answ'),
 

@@ -163,23 +163,21 @@ class QustionListSerializer(serializers.ModelSerializer):
         return questions
 
     def update(self, instance, validated_data):
-
         polls = instance.polls.all()
+        q = self.context.get('request').parser_context['kwargs']['pk']
+        questions = Question.objects.get(pk=q)
         for p in polls:
-            print(p)
-            obj = Poll.objects.get(pk=p.pk)
-            if obj.time_start:
+            if p.time_start:
                 raise serializers.ValidationError('Вопросы нельзя обновить, так как опрос уже начат')
-
+            questions.polls.remove(p)
         pol = validated_data.pop('polls')
         for p in pol:
-            print(p)
-            obj = Poll.objects.get(pk=p.pk)
-            if obj.time_start:
+            if p.time_start:
                 raise serializers.ValidationError('Вопросы нельзя обновить, так как опрос уже начат')
+            p.question_set.add(questions)
         for key, value in validated_data.items():
             setattr(instance, key, value)
-            print(key)
+
         instance.save()
         return instance
 
